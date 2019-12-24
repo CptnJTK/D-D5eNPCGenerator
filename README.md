@@ -5,7 +5,7 @@ A small NPC generator using the standard 5th edition D&amp;D parameters. Creates
 ## Features
 Generates NPCs complete with names, personalities, motivations, and more. 
 Genders are generated on a simplified spectrum consisting of: Female, feminine, androgynous, masculine, and male; with consistant pronouns.
-Chooses different races by an approximate proportion to their average prevalence in the world:
+Chooses different races by an approximate proportion to their average prevalence in the world (ideal for large, human townships):
 * Humans     - 64%
 * Elves      - 10%
 * Dwarves    - 10%
