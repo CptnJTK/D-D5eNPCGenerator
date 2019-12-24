@@ -88,6 +88,7 @@ public class MainView extends JPanel {
                     if (response.equals(1)) {
                         return;
                     }
+                    savedNPCs.getElementAt(savedList.getSelectedIndex()).delete();
                     savedNPCs.removeElementAt(savedList.getSelectedIndex());
                 }
             }
