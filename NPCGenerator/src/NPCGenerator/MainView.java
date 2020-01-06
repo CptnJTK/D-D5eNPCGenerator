@@ -27,27 +27,33 @@ import javax.swing.event.ListSelectionListener;
 
 @SuppressWarnings("serial")
 public class MainView extends JPanel {
-    public static DefaultListModel<NPC> savedNPCs = new DefaultListModel<NPC>();
+    // Current model data
+    private NPC currentNPC = new NPC();
     
+    // Model data storage
+    public static DefaultListModel<NPC> savedNPCs = new DefaultListModel<NPC>();
+    private final JList<NPC> savedList = new JList<NPC>(savedNPCs);    
+    
+    // Buttons
     private final JButton newButton = new JButton("New NPC");
     private final JButton saveButton = new JButton("Save NPC");
     private final JButton loadButton = new JButton("Load NPC");
     private final JButton deleteButton = new JButton("Delete NPC");
     
-    private NPC currentNPC = new NPC();
-    
-    Font bold = new Font("Arial", Font.BOLD, 16);
+    // Labels
     Font normal = new Font("Arial", Font.PLAIN, 14);
-    private final JLabel nameLabel = new JLabel(currentNPC.getName());
     private final JLabel infoLabel = new JLabel(currentNPC.getInfo());
+    // Font bold = new Font("Arial", Font.BOLD, 16); UNUSED_FONT_BOLD
+    // private final JLabel nameLabel = new JLabel(currentNPC.getName()); UNUSED_LABEL_NAME
     
-    private final JList<NPC> savedList = new JList<NPC>(savedNPCs);
     
+    // Constructor
     public MainView() {
         this.layoutView();
         this.registerListeners();
     }
 
+    // Build layout
     private void layoutView() {
         this.setLayout(new BorderLayout());
         JPanel buttons = new JPanel();
@@ -64,7 +70,9 @@ public class MainView extends JPanel {
         this.add(new JScrollPane(savedList), BorderLayout.EAST);
     }
     
+    // Instantiate listeners
     private void registerListeners() {
+        // Button listeners
         this.newButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent evt) {
@@ -124,13 +132,17 @@ public class MainView extends JPanel {
                 currentNPC.save();
             }
         });
+        
+        // Property change listeners
         this.currentNPC.addPropertyChangeListener(new PropertyChangeListener(){
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
-                MainView.this.nameLabel.setText(currentNPC.getName());
+                // MainView.this.nameLabel.setText(currentNPC.getName()); UNUSED_LABEL_NAME
                 MainView.this.infoLabel.setText(currentNPC.getInfo());
             }
         });
+        
+        // List listeners
         this.savedList.addListSelectionListener( new ListSelectionListener(){
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -139,6 +151,8 @@ public class MainView extends JPanel {
             
         });
     }
+    
+    // Sets list cell label to string representation of object
     public class ListCellRenderer extends DefaultListCellRenderer {
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             JLabel label = (JLabel)super.getListCellRendererComponent(list,  value,  index,  isSelected,  cellHasFocus);
@@ -146,6 +160,9 @@ public class MainView extends JPanel {
             return label;
         }
     }
+    
+    // Saves all cached objects to file
+        // Run automatically upon close
     public static void save(BufferedWriter out) throws IOException {
         if (savedNPCs.getSize() > 0) {
             String outLine = "";
@@ -159,6 +176,9 @@ public class MainView extends JPanel {
             
         }
     }
+    
+    // Loads all saved objects from file
+        // Run automatically upon start
     public static void load(BufferedReader in) throws IOException {
         String currentLine;
         String totalLine = "";

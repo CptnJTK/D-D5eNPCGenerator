@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class NPC {
+    // Constants
     private final char[] VOWELS = { 'a', 'e', 'i', 'o', 'u'};
     private final String[][] GENDERS = { 
             {"female", "she", "her", "her", "hers", "herself"}, 
@@ -217,10 +218,12 @@ public class NPC {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
+    // Object Properties
     private String name;
     private String info;
     private boolean saved;
     
+    // Default Constructor
     public NPC(){
         try {
             String[] temp = generateOutput();
@@ -230,11 +233,16 @@ public class NPC {
         }catch(IOException e) {
         }
     }
+    
+    // Load constructor
+        // Used by MainView.load to populate data we know is saved
     public NPC(String name, String info) {
         this.name = name;
         this.info = info;
         this.saved = true;
     }
+    
+    // Used by MainView.loadButton listener to load selected NPC into the spotlight
     public NPC load(NPC newNPC) {
         this.name = newNPC.name;
         this.info = newNPC.info;
@@ -250,9 +258,12 @@ public class NPC {
         this.pcs.firePropertyChange("Name Changed", null, null);
     }
     
+    // Returns NPC info for multi-line label display
     public String getInfo() {
         return "<html>" + this.info.replaceAll(System.lineSeparator(), "<br/>") + "</html>";
     }
+    
+    // Returns NPC info for saving
     public String getRawInfo() {
         return this.info;
     }
@@ -291,6 +302,7 @@ public class NPC {
         ArrayList<String> possibleNames = new ArrayList<String>();
         Charset charset = Charset.forName("US-ASCII");
         String name = "";
+        // TODO redo to allow for custom genders and pronouns
         gender = (gender.equals("masculine")?"male":(gender.equals("feminine")?"female":gender.equals("androgynous")?GENDER_BINARY[rand.nextInt(2)]:gender));
         race = (race.equals("half-elf")?HALF_ELF_BINARY[rand.nextInt(2)]: race);
         BufferedReader reader = null;
