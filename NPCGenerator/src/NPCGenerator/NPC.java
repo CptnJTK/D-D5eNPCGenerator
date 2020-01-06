@@ -287,6 +287,7 @@ public class NPC {
                 + interactions + " towards others but " + gender[1] + " prioritizes " + ideal
                 + " over all else. " + name + " is motivated by " + gender[3] + " " + bond + ". "
                 + name + " secretly " + secret + ".";
+        info = info.replace(",", "");
         String[] outArray = { name, info };
         return outArray;
     }
