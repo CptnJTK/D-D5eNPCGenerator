@@ -29,24 +29,23 @@ import javax.swing.event.ListSelectionListener;
 public class MainView extends JPanel {
     // Current model data
     private NPC currentNPC = new NPC();
-    
+
     // Model data storage
     public static DefaultListModel<NPC> savedNPCs = new DefaultListModel<NPC>();
-    private final JList<NPC> savedList = new JList<NPC>(savedNPCs);    
-    
+    private final JList<NPC> savedList = new JList<NPC>(savedNPCs);
+
     // Buttons
     private final JButton newButton = new JButton("New NPC");
     private final JButton saveButton = new JButton("Save NPC");
     private final JButton loadButton = new JButton("Load NPC");
     private final JButton deleteButton = new JButton("Delete NPC");
-    
+
     // Labels
     Font normal = new Font("Arial", Font.PLAIN, 14);
     private final JLabel infoLabel = new JLabel(currentNPC.getInfo());
     // Font bold = new Font("Arial", Font.BOLD, 16); UNUSED_FONT_BOLD
     // private final JLabel nameLabel = new JLabel(currentNPC.getName()); UNUSED_LABEL_NAME
-    
-    
+
     // Constructor
     public MainView() {
         this.layoutView();
@@ -57,7 +56,7 @@ public class MainView extends JPanel {
     private void layoutView() {
         this.setLayout(new BorderLayout());
         JPanel buttons = new JPanel();
-        buttons.setLayout(new GridLayout(1,4));
+        buttons.setLayout(new GridLayout(1, 4));
         buttons.add(newButton);
         buttons.add(saveButton);
         buttons.add(deleteButton);
@@ -69,7 +68,7 @@ public class MainView extends JPanel {
         savedList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.add(new JScrollPane(savedList), BorderLayout.EAST);
     }
-    
+
     // Instantiate listeners
     private void registerListeners() {
         // Button listeners
@@ -79,8 +78,9 @@ public class MainView extends JPanel {
                 if (!currentNPC.isSaved()) {
                     Object response = JOptionPane.showOptionDialog(null,
                             "The current NPC is not saved, are you sure you want to continue?",
-                            "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
-                    if (response.equals(1)) 
+                            "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                            null, null);
+                    if (response.equals(1))
                         return;
                 }
                 currentNPC.regenerate();
@@ -92,7 +92,8 @@ public class MainView extends JPanel {
                 if (MainView.this.savedList.getSelectedValue() != null) {
                     Object response = JOptionPane.showOptionDialog(null,
                             "The selected NPC will be deleted, are you sure you want to continue?",
-                            "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+                            "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                            null, null);
                     if (response.equals(1)) {
                         return;
                     }
@@ -108,7 +109,8 @@ public class MainView extends JPanel {
                     if (!currentNPC.isSaved()) {
                         Object response = JOptionPane.showOptionDialog(null,
                                 "The current NPC is not saved, are you sure you want to continue?",
-                                "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+                                "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
+                                null, null, null);
                         if (response.equals(1)) {
                             return;
                         }
@@ -120,10 +122,11 @@ public class MainView extends JPanel {
         this.saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent evt) {
-                if(currentNPC.isSaved()) {
+                if (currentNPC.isSaved()) {
                     Object response = JOptionPane.showOptionDialog(null,
                             "The current NPC is already saved, do you wish to save a copy?",
-                            "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+                            "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                            null, null);
                     if (response.equals(1)) {
                         return;
                     }
@@ -132,62 +135,65 @@ public class MainView extends JPanel {
                 currentNPC.save();
             }
         });
-        
+
         // Property change listeners
-        this.currentNPC.addPropertyChangeListener(new PropertyChangeListener(){
+        this.currentNPC.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 // MainView.this.nameLabel.setText(currentNPC.getName()); UNUSED_LABEL_NAME
                 MainView.this.infoLabel.setText(currentNPC.getInfo());
             }
         });
-        
+
         // List listeners
-        this.savedList.addListSelectionListener( new ListSelectionListener(){
+        this.savedList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                
+
             }
-            
+
         });
     }
-    
+
     // Sets list cell label to string representation of object
     public class ListCellRenderer extends DefaultListCellRenderer {
-        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            JLabel label = (JLabel)super.getListCellRendererComponent(list,  value,  index,  isSelected,  cellHasFocus);
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                boolean isSelected, boolean cellHasFocus) {
+            JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index,
+                    isSelected, cellHasFocus);
             label.setText(value.toString());
             return label;
         }
     }
-    
+
     // Saves all cached objects to file
-        // Run automatically upon close
+    // Run automatically upon close
     public static void save(BufferedWriter out) throws IOException {
         if (savedNPCs.getSize() > 0) {
             String outLine = "";
-            for(int i = 0; i < savedNPCs.getSize(); i++) {
-                outLine += savedNPCs.getElementAt(i).getName()+'|'+savedNPCs.getElementAt(0).getRawInfo()+'|';
+            for (int i = 0; i < savedNPCs.getSize(); i++) {
+                outLine += savedNPCs.getElementAt(i).getName() + '|'
+                        + savedNPCs.getElementAt(0).getRawInfo() + '|';
                 out.write(outLine);
-                if (i < savedNPCs.getSize()-1) {
+                if (i < savedNPCs.getSize() - 1) {
                     out.write(System.lineSeparator());
                 }
             }
-            
+
         }
     }
-    
+
     // Loads all saved objects from file
-        // Run automatically upon start
+    // Run automatically upon start
     public static void load(BufferedReader in) throws IOException {
         String currentLine;
         String totalLine = "";
-        while((currentLine = in.readLine())!=null) {
+        while ((currentLine = in.readLine()) != null) {
             totalLine += currentLine;
         }
         StringTokenizer st = new StringTokenizer(totalLine, "|");
         while (st.hasMoreElements()) {
-            savedNPCs.addElement(new NPC((String)st.nextElement(), (String)st.nextElement()));
+            savedNPCs.addElement(new NPC((String) st.nextElement(), (String) st.nextElement()));
         }
     }
 }
