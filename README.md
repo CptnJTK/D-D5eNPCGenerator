@@ -15,9 +15,12 @@ Chooses different races by an approximate proportion to their average prevalence
 * Half-Orcs  - 1%
 
 Keyboard Controls:
-DELETE - Delete selected saved NPC
-N - Create new NPC
-UP - Move saved NPC selection up
-DOWN - Move saved NPC selection down
-LEFT - Load selected saved NPC
-RIGHT - Save current NPC
+* DELETE - Delete selected saved NPC
+* N - Create new NPC
+* UP - Move saved NPC selection up
+* DOWN - Move saved NPC selection down
+* LEFT - Load selected saved NPC
+* RIGHT - Save current NPC
+
+### Preview Image
+![Preview Image](https://github.com/garretlowe/D-D5eNPCGenerator/blob/master/preview.png)
