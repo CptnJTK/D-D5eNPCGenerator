@@ -13,3 +13,11 @@ Chooses different races by an approximate proportion to their average prevalence
 * Half-Elves - 5%
 * Gnomes     - 4%
 * Half-Orcs  - 1%
+
+Keyboard Controls:
+DELETE - Delete selected saved NPC
+N - Create new NPC
+UP - Move saved NPC selection up
+DOWN - Move saved NPC selection down
+LEFT - Load selected saved NPC
+RIGHT - Save current NPC
