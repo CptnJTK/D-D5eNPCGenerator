@@ -127,7 +127,7 @@ public class NPC {
 
     // Returns NPC info for multi-line label display
     public String getInfo() {
-        return "<html>" + this.info.replaceAll(System.lineSeparator(), "<br/>") + "</html>";
+        return this.info.replaceAll(System.lineSeparator(), "<br/>");
     }
 
     // Returns NPC info for saving
@@ -277,9 +277,8 @@ public class NPC {
         String name = generateName(gender[0], race);
 
         String indefiniteArticle = (contains(VOWELS, gender[0].charAt(0))) ? "an" : "a";
-        String info = "<b>" + name + "</b> is " + indefiniteArticle + " " + gender[0] + " " + race
-                + ". " + gender[1].substring(0, 1).toUpperCase() + gender[1].substring(1)
-                + " is visually distinguished by " + gender[3] + " " + appearance + ". " + name
+        String info = name + " is " + indefiniteArticle + " " + gender[0] + " " + race
+                + ", visually distinguished by " + gender[3] + " " + appearance + ". " + name
                 + " boasts exceptional " + highAbility + " making " + gender[2] + " "
                 + highAbilityDesc + " while simultaneously being " + lowAbilityDesc + " from "
                 + gender[3] + " lacklustre " + lowAbility + ". " + name + " displays talent in "
@@ -287,7 +286,6 @@ public class NPC {
                 + interactions + " towards others but " + gender[1] + " prioritizes " + ideal
                 + " over all else. " + name + " is motivated by " + gender[3] + " " + bond + ". "
                 + name + " secretly " + secret + ".";
-        info = info.replace(",", "");
         String[] outArray = { name, info };
         return outArray;
     }

@@ -6,11 +6,18 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.StringTokenizer;
 
 import javax.swing.DefaultListCellRenderer;
@@ -21,18 +28,19 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 @SuppressWarnings("serial")
-public class MainView extends JPanel {
+public class MainView extends JPanel{
     // Current model data
-    private NPC currentNPC = new NPC();
+    NPC currentNPC = new NPC();
 
     // Model data storage
     public static DefaultListModel<NPC> savedNPCs = new DefaultListModel<NPC>();
-    private final JList<NPC> savedList = new JList<NPC>(savedNPCs);
+    final JList<NPC> savedList = new JList<NPC>(savedNPCs);
 
     // Buttons
     private final JButton newButton = new JButton("New NPC");
@@ -41,10 +49,10 @@ public class MainView extends JPanel {
     private final JButton deleteButton = new JButton("Delete NPC");
 
     // Labels
-    Font normal = new Font("Arial", Font.PLAIN, 14);
-    private final JLabel infoLabel = new JLabel(currentNPC.getInfo());
+    Font normal = new Font("Arial", Font.PLAIN, 16);
     // Font bold = new Font("Arial", Font.BOLD, 16); UNUSED_FONT_BOLD
     // private final JLabel nameLabel = new JLabel(currentNPC.getName()); UNUSED_LABEL_NAME
+    JTextArea ta = new JTextArea();
 
     // Constructor
     public MainView() {
@@ -61,9 +69,14 @@ public class MainView extends JPanel {
         buttons.add(saveButton);
         buttons.add(deleteButton);
         buttons.add(loadButton);
-        infoLabel.setFont(normal);
         this.add(buttons, BorderLayout.NORTH);
-        this.add(infoLabel, BorderLayout.CENTER);
+        ta.setEditable(false);
+        ta.setLineWrap(true);
+        ta.setOpaque(false);
+        ta.setWrapStyleWord(true);
+        ta.setFont(normal);
+        ta.setText(currentNPC.getRawInfo());
+        this.add(ta, BorderLayout.CENTER);
         savedList.setCellRenderer(new ListCellRenderer());
         savedList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.add(new JScrollPane(savedList), BorderLayout.EAST);
@@ -133,6 +146,7 @@ public class MainView extends JPanel {
                 }
                 savedNPCs.addElement(currentNPC.copy());
                 currentNPC.save();
+                MainView.this.savedList.setSelectedIndex(MainView.this.savedList.getFirstVisibleIndex());
             }
         });
 
@@ -141,7 +155,7 @@ public class MainView extends JPanel {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 // MainView.this.nameLabel.setText(currentNPC.getName()); UNUSED_LABEL_NAME
-                MainView.this.infoLabel.setText(currentNPC.getInfo());
+                MainView.this.ta.setText(currentNPC.getInfo());
             }
         });
 
@@ -154,7 +168,7 @@ public class MainView extends JPanel {
 
         });
     }
-
+	
     // Sets list cell label to string representation of object
     public class ListCellRenderer extends DefaultListCellRenderer {
         public Component getListCellRendererComponent(JList<?> list, Object value, int index,
@@ -168,32 +182,28 @@ public class MainView extends JPanel {
 
     // Saves all cached objects to file
     // Run automatically upon close
-    public static void save(BufferedWriter out) throws IOException {
-        if (savedNPCs.getSize() > 0) {
-            String outLine = "";
-            for (int i = 0; i < savedNPCs.getSize(); i++) {
-                outLine += savedNPCs.getElementAt(i).getName() + '|'
-                        + savedNPCs.getElementAt(0).getRawInfo() + '|';
-                out.write(outLine);
-                if (i < savedNPCs.getSize() - 1) {
-                    out.write(System.lineSeparator());
-                }
-            }
-
+    public static void save(ObjectOutputStream out) throws IOException {
+    	out.writeInt(savedNPCs.getSize());
+        for (int i = 0; i < savedNPCs.getSize(); i++) {
+            out.writeObject(savedNPCs.elementAt(i).getName());
+            out.writeObject(savedNPCs.elementAt(i).getRawInfo());
         }
+
     }
 
     // Loads all saved objects from file
     // Run automatically upon start
-    public static void load(BufferedReader in) throws IOException {
-        String currentLine;
-        String totalLine = "";
-        while ((currentLine = in.readLine()) != null) {
-            totalLine += currentLine;
-        }
-        StringTokenizer st = new StringTokenizer(totalLine, "|");
-        while (st.hasMoreElements()) {
-            savedNPCs.addElement(new NPC((String) st.nextElement(), (String) st.nextElement()));
-        }
+    public static void load(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    	try {
+	        int size = in.readInt();
+	        for(int i = 0; i < size; i++) {
+	            savedNPCs.addElement(new NPC((String) in.readObject(), (String) in.readObject()));
+	        }
+    	} catch (EOFException e) {
+    		FileOutputStream outFile = new FileOutputStream("SaveData.sav");
+        	ObjectOutputStream out = new ObjectOutputStream(outFile);
+        	out.writeInt(0);
+        	out.close();
+    	}
     }
 }
