@@ -1,8 +1,8 @@
-# D&D 5e NPC Generator 
+# SRD 5 NPC Generator 
 ### by Garret Lowe
 ## Description
-A small NPC generator using the standard 5th edition D&amp;D parameters. Creates short character descriptions and saves generated NPCs locally.
-![Preview Image](https://github.com/garretlowe/D-D5eNPCGenerator/blob/master/preview.png)
+A small NPC generator using the parameters Wizards of the Coast's System Reference Document 5.1. Creates short character descriptions and saves generated NPCs locally.
+![Preview Image](https://github.com/garretlowe/SRD5NPCGenerator/blob/master/preview.png)
 
 ## Features
 Generates NPCs complete with names, personalities, motivations, and more. 
