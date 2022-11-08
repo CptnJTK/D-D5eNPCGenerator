@@ -1,4 +1,4 @@
-# SRD 5 NPC Generator 
+# SRD5 NPC Generator 
 ### by Garret Lowe
 ## Description
 A small NPC generator using the parameters Wizards of the Coast's System Reference Document 5.1. Creates short character descriptions and saves generated NPCs locally.
